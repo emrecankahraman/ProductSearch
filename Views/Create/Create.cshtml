@@ -1,0 +1,156 @@
+﻿@model ProductSearch.Models.Product
+@{
+    ViewData["Title"] = "Create New Product";
+    Layout = "_Layout";
+}
+<style>
+    body {
+        background-color: #f2e8da;
+        color: #5f4339;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f2e8da;
+    }
+
+    h1 {
+        color: #5f4339;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    form {
+        background: #f7f1e7;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(95, 67, 57, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #5f4339;
+    }
+
+    input {
+        padding: 12px;
+        border: 1px solid #d1c3b8;
+        border-radius: 8px;
+        font-size: 16px;
+        width: 100%;
+        box-sizing: border-box;
+        transition: border-color 0.3s;
+    }
+
+        input:focus {
+            border-color: #8a6d3b;
+            outline: none;
+        }
+
+    .button-group {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-primary {
+        background-color: #5f4339;
+        color: #fff;
+    }
+
+        .btn-primary:hover {
+            background-color: #402b23;
+        }
+
+    .btn-secondary {
+        background-color: #8a6d3b;
+        color: #fff;
+    }
+
+        .btn-secondary:hover {
+            background-color: #6d563b;
+        }
+
+</style>
+<h1>@ViewData["Title"]</h1>
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <div class="alert alert-warning">
+        @ViewBag.Message
+    </div>
+}
+
+<form asp-controller="Create" asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Name">Product Name</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Department">Product Department</label>
+        <input asp-for="Department" class="form-control" />
+        <span asp-validation-for="Department" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="Keywords">Keyword Name</label>
+        <input type="text" id="Keywords" name="Keywords" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Description">Description</label>
+        <input asp-for="Description" class="form-control" />
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Quantity">Quantity</label>
+        <input asp-for="Quantity" class="form-control" />
+        <span asp-validation-for="Quantity" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="supervisorName">Supervisor Name</label>
+        <input type="text" id="supervisorName" name="supervisorName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="supervisorLastName">Supervisor LastName</label>
+        <input type="text" id="supervisorLastName" name="supervisorLastName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="supervisorDepartment">Supervisor Depertmant</label>
+        <input type="text" id="supervisorDepartment" name="supervisorDepartment" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="coSupervisorName">coSupervisor name</label>
+        <input type="text" id="coSupervisorName" name="coSupervisorName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="coSupervisorLastName">coSupervisor Lastname</label>
+        <input type="text" id="coSupervisorLastName" name="coSupervisorLastName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label for="coSupervisorDepartment">CoSupervisor Depertmant</label>
+        <input type="text" id="coSupervisorDepartment" name="coSupervisorDepartment" class="form-control" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+
+   </form> 

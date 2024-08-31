@@ -1,0 +1,104 @@
+﻿@model ProductSearch.Models.Admin
+@{
+    ViewData["Title"] = "Log in ";
+    Layout = "_Layout";
+}
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #e0d9c9;
+    }
+
+    h2 {
+        text-align: center;
+        color: #5f4339;
+        margin-top: 160px;
+    }
+
+    form {
+            max-width: 400px;
+            margin: 0 auto;
+            background: #f2e8da;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-group {
+            width: 100%;
+        }
+
+    label {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    input {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .btn-primary {
+        background-color:#5f4339;
+        color: #fff;
+        padding: 10px 15px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background-color: #402b23;
+    }
+
+    .menu {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .menu a {
+        text-decoration: none;
+        color: #333;
+        margin-right: 10px;
+        font-size: 18px;
+    }
+</style>
+
+<h2>@ViewData["Title"]</h2>
+<form asp-action="Login" method="post">
+    <div asp-validation-summary="All"></div>
+    <div class="form-group">
+        <label asp-for="Username"></label>
+        <input asp-for="Username" class="form-control" />
+        <span asp-validation-for="Username"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" class="form-control" type="password" />
+        <span asp-validation-for="Password"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Enter</button>
+
+</form>
+<script>
+             document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById("UpdateButton").addEventListener("click", function () {
+            window.location.href = '/Update/Update';
+        });
+    });
+
+</script>
+
+

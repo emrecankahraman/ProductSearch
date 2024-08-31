@@ -1,0 +1,220 @@
+﻿@model List<ProductSearch.Models.Product>
+@{
+    ViewData["Title"] = "Home Page";
+}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        background-color: #e0d9c9;
+        color: #402b23;
+    }
+
+    header {
+        background-color: #5f4339;
+        color: #fff;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .menu {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+    }
+
+        .menu a {
+            text-decoration: none;
+            color: #5f4339;
+            font-weight: bold;
+            transition: color 0.3s ease-in-out;
+            font-size: 18px;
+        }
+
+            .menu a:hover {
+                color: #402b23;
+            }
+
+    form {
+        background: #f2e8da;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    input {
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #5f4339;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    button {
+        background-color: #5f4339;
+        color: #fff;
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+        button:hover {
+            background-color: #402b23;
+        }
+
+    h2 {
+        text-align: center;
+        color: #402b23;
+        margin-top: 20px;
+    }
+
+    p {
+        text-align: center;
+        color: #5f4339;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #5f4339;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #5f4339;
+        color: #fff;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2e8da;
+    }
+
+    h1 {
+        font-size: 42px;
+    }
+
+    .menu a {
+        font-size: 24px;
+    }
+
+    .btn {
+        background-color: #5f4339;
+        color: #fff;
+        padding: 10px 15px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+</style>
+<div class="container">
+    <h1>@ViewData["Title"]</h1>
+  
+        <div class="menu">
+            <a asp-controller="Account" asp-action="Login">Log in</a>
+        </div>
+        <div class="row justify-content-center">
+
+        <form asp-controller="Home" asp-action="SearchByMultipleCriteria" method="post" class="col-lg-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="Product Name">Search By Product Name:</label>
+                    <input type="text" id="productName" name="productName" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <label for="Product Keyword">Search By Product Keyword</label>
+                    <input type="text" id="productKeyword" name="productKeyword" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <label for="Description">Search By Description:</label>
+                    <input type="text" id="description" name="description" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <label for="Supervisor Name">Search By Supervisor Name:</label>
+                    <input type="text" id="supervisorName" name="supervisorName" class="form-control" />
+                </div><div class="col-md-6">
+                    <label for="Supervisor LastName">Search By Supervisor LastName:</label>
+                    <input type="text" id="supervisorLastName" name="supervisorLastName" class="form-control" />
+                </div><div class="col-md-6">
+                    <label for="Supervisor Department">Search By Supervisor Department:</label>
+                    <input type="text" id="Department " name="Department " class="form-control" />
+                </div><div class="col-md-6">
+                    <label for="CoSupervisor Name">Search By CoSupervisor Name:</label>
+                    <input type="text" id="coSupervisorName" name="coSupervisorName" class="form-control" />
+                </div><div class="col-md-6">
+                    <label for="CoSupervisor LastName">Search By CoSupervisor LastName:</label>
+                    <input type="text" id="coSupervisorLastName" name="coSupervisorLastName" class="form-control" />
+                </div><div class="col-md-6">
+                    <label for="CoSupervisor Department">Search By CoSupervisor Department:</label>
+                    <input type="text" id="coSupervisorDepartment" name="coSupervisorDepartment" class="form-control" />
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Search</button>
+        </form>
+     </div>
+   
+    @if (ViewBag.Search != null)
+    {
+        <h2>Search Results</h2>
+        <p>@ViewBag.Search</p>
+        @if (Model != null && Model.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th> Product Name</th>
+                        <th> Product Keyword</th>
+                        <th> Product Description</th>
+                        <th> Supervisor Name </th>
+                        <th> Supervisor LastName </th>
+                        <th> Supervisor Department </th>
+                        <th> CoSupervisor Name </th>
+                        <th> CoSupervisor LastName</th>
+                        <th> CoSupervisor Department</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model)
+                    {
+                        <tr>
+                            <td> @product.Name</td>
+                            <td>
+                                @foreach (var item in product.Keywords)
+                                {
+                                    @item.KeywordText
+                                }
+                            </td>
+                            <td>@product.Description</td>
+                            <td>@product.Supervisor.Name</td>
+                            <td>@product.Supervisor.Surname</td>
+                            <td>@product.Supervisor.Department</td>
+                            <td>@product.CoSupervisor.Name</td>
+                            <td>@product.CoSupervisor.Surname</td>
+                            <td>@product.CoSupervisor.Department</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No result find.</p>
+        }
+    }
+
+</div>
+
+

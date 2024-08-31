@@ -1,0 +1,412 @@
+﻿@model List<ProductSearch.Models.Product>
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@{
+    ViewData["Title"] = "Update";
+}
+<style>
+    .top-buttons {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        font-size: 14px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .btn-admin {
+        background: yellow;
+    }
+
+    .btn-logout {
+        background-color: #d2b48c;
+        color: #5f4339;
+        border: none;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    body {
+        background-color: #f2e8da;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    form {
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-fields {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .field-group {
+        flex: 1 1 calc(33.333% - 20px);
+        min-width: 250px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        color: #5f4339;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #5f4339;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .button-group {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .button-wrapper {
+        margin-top: 20px;
+        text-align: right;
+    }
+
+    .btn-primary {
+        background-color: #5f4339;
+        color: #fff;
+    }
+
+        .btn-primary:hover {
+            background-color: #402b23;
+        }
+
+    .btn-secondary {
+        background-color: #8a6d3b;
+        color: #fff;
+    }
+
+        .btn-secondary:hover {
+            background-color: #6d563b;
+        }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+        .table th, .table td {
+            border: 1px solid #5f4339;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .table th {
+            background-color: #5f4339;
+            color: #fff;
+        }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+        background-color: #f2e8da;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group select,
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #5f4339;
+            border-radius: 4px;
+        }
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+<div class="container">
+    <div class="top-buttons">
+        <a asp-controller="Create" asp-action="Create" class="btn btn-success">Create</a>
+        <a asp-controller="Delete" asp-action="Delete" class="btn btn-danger">Delete</a>
+        @if ((await AuthorizationService.AuthorizeAsync(User, "AdminRole")).Succeeded)
+        {
+            <a asp-controller="AdminTemplate" asp-action="Index" class="btn btn-admin">Admin Dashboard'a Git</a>
+        }
+        @if (User.Identity.IsAuthenticated)
+        {
+            <form asp-controller="Account" asp-action="Logout" method="post">
+                <button type="submit" class="btn btn-logout">Logout</button>
+            </form>
+        }
+    </div>
+    <form asp-controller="Update" asp-action="SearchByMultipleCriteria" method="post">
+        <div class="search-fields">
+            <div class="field-group">
+                <label for="productName">Search By Product Name:</label>
+                <input type="text" id="productName" name="productName" class="form-control" />
+            </div>
+            <div class="field-group">
+                <label for="productKeyword">Search By Product Keyword:</label>
+                <input type="text" id="productKeyword" name="productKeyword" class="form-control" />
+            </div>
+            <div class="field-group">
+                <label for="description">Search By Description:</label>
+                <input type="text" id="description" name="description" class="form-control" />
+            </div>
+            <div class="field-group">
+                <label for="supervisorName">Search By Supervisor Name:</label>
+                <input type="text" id="supervisorName" name="supervisorName" class="form-control" />
+            </div>
+            <div class="field-group">
+                <label for="supervisorLastName">Search By Supervisor LastName:</label>
+                <input type="text" id="supervisorLastName" name="supervisorLastName" class="form-control" />
+            </div>
+            <div class="field-group">
+                <label for="Department">Search By Supervisor Department:</label>
+                <input type="text" id="Department" name="Department" class="form-control" />
+            </div>
+            <div class="field-group">
+                <label for="coSupervisorName">Search By CoSupervisor Name:</label>
+                <input type="text" id="coSupervisorName" name="coSupervisorName" class="form-control" />
+            </div>
+            <div class="field-group">
+                <label for="coSupervisorLastName">Search By CoSupervisor LastName:</label>
+                <input type="text" id="coSupervisorLastName" name="coSupervisorLastName" class="form-control" />
+            </div>
+            <div class="field-group">
+                <label for="coSupervisorDepartment">Search By CoSupervisor Department:</label>
+                <input type="text" id="coSupervisorDepartment" name="coSupervisorDepartment" class="form-control" />
+            </div>
+        </div>
+        <div class="button-group">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+    @if (ViewBag.Search != null)
+    {
+        <h2>Search Results</h2>
+        <p>@ViewBag.Search</p>
+        @if (Model != null && Model.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Product Keyword</th>
+                        <th>Product Description</th>
+                        <th>Quantity</th>
+                        <th>Supervisor Name</th>
+                        <th>Supervisor LastName</th>
+                        <th>Supervisor Department</th>
+                        <th>CoSupervisor Name</th>
+                        <th>CoSupervisor LastName</th>
+                        <th>CoSupervisor Department</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model)
+                    {
+                        <tr>
+                            <td>@product.Name</td>
+                            <td>@(product.Keywords != null ? string.Join(", ", product.Keywords.Select(k => k.KeywordText)) : "No keywords")</td>
+                            <td>@product.Description</td>
+                            <td>@product.Quantity</td>
+                            <td>@product.Supervisor.Name</td>
+                            <td>@product.Supervisor.Surname</td>
+                            <td>@product.Supervisor.Department</td>
+                            <td>@product.CoSupervisor.Name</td>
+                            <td>@product.CoSupervisor.Surname</td>
+                            <td>@product.CoSupervisor.Department</td>
+                            <td><div class="button-wrapper">
+                                 <button type="button" class="btn btn-primary update-button" data-product-id="@product.Id">Update</button></div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No results found.</p>
+        }
+    }
+    <div id="updateModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeUpdateModal()">&times;</span>
+            <h2>Update Product</h2>
+            <form id="updateForm">
+                <input type="hidden" id="productId" name="id">
+                <div class="form-group">
+                    <label for="selectedValue">Select field to update:</label>
+                    <select id="selectedValue" name="selectedValue">
+                        <option value="Name">Product Name</option>
+                        <option value="Keywords">Product Keyword</option>
+                        <option value="Description">Description</option>
+                        <option value="SupervisorName">Supervisor Name</option>
+                        <option value="SupervisorLastName">Supervisor Last Name</option>
+                        <option value="SupervisorDepartment">Supervisor Department</option>
+                        <option value="CoSupervisorName">Co-Supervisor Name</option>
+                        <option value="CoSupervisorLastName">Co-Supervisor Last Name</option>
+                        <option value="CoSupervisorDepartment">Co-Supervisor Department</option>
+                        <option value="Quantity">Quantity</option>
+                    </select>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label for="newValue">New Value:</label>
+                        <input type="text" id="newValue" name="newValue">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary" id="submitUpdate">Update</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var updateButtons = document.querySelectorAll('.update-button');
+        updateButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                var productId = this.getAttribute('data-product-id');
+                openUpdateModal(productId);
+            });
+        });
+        document.getElementById('submitUpdate').addEventListener('click', updateProduct);
+        document.getElementById('selectedValue').addEventListener('change', handleFieldSelection);
+    });
+    function openUpdateModal(productId) {
+        document.getElementById('productId').value = productId;
+        document.getElementById('updateModal').style.display = "block";
+    }
+    function closeUpdateModal() {
+        document.getElementById('updateModal').style.display = "none";
+    }
+    function handleFieldSelection() {
+        var selectedField = document.getElementById('selectedValue').value;
+        var newValueInput = document.getElementById('newValue');
+        if (selectedField === "Keywords") {
+            fetchKeywords(document.getElementById('productId').value);
+        } else {
+            newValueInput.value = "";
+        }
+    }
+    function fetchKeywords(productId) {
+        fetch(`/Update/GetKeywords?id=${productId}`)
+            .then(response => response.json())
+            .then(keywords => {
+                document.getElementById('newValue').value = keywords.join(", ");
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to fetch keywords');
+            });
+    }
+    function updateProduct() {
+        var productId = document.getElementById('productId').value;
+        var selectedValue = document.getElementById('selectedValue').value;
+        var newValue = document.getElementById('newValue').value.trim(); 
+        console.log('Updating product:', { productId, selectedValue, newValue });
+        fetch('/Update/UpdateProduct', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `id=${productId}&selectedValue=${selectedValue}&newValue=${encodeURIComponent(newValue)}`
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('Update successful');
+                    if (selectedValue === 'Keywords') {
+                        document.getElementById('newValue').value = data.updatedKeywords;
+                    }
+                    location.reload();
+                } else {
+                    alert('Update failed: ' + (data.message || 'Unknown error'));
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('An error occurred while updating: ' + error.message);
+            });
+
+        closeUpdateModal();
+    }
+</script>

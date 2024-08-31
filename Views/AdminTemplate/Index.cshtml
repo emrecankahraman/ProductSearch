@@ -1,0 +1,181 @@
+﻿@using System.Text.Json
+@using ProductSearch.Models
+@model List<Product>
+
+
+@{
+
+    var chartOneData = new List<int>();
+    var chartOneLabels = new List<string>();
+
+    if (Model != null && Model.Count > 0)
+    {
+        chartOneData = Model.Select(p => p.Quantity ?? 0).ToList();
+        chartOneLabels = Model.Select(p => p.Name ?? "N/A").ToList();
+    }
+
+    var chartOneDataJson = JsonSerializer.Serialize(chartOneData);
+    var chartOneLabelsJson = JsonSerializer.Serialize(chartOneLabels);
+
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+    <!-- Tailwind -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        @@import url('https://fonts.googleapis.com/css?family=Karla:400,700&display=swap');
+
+        .font-family-karla {
+            font-family: karla;
+        }
+
+        .bg-sidebar {
+            background: #cfab7d;
+        }
+
+        .cta-btn {
+            color: #cfab7d;
+        }
+
+        .upgrade-btn {
+            background: #cfab7d;
+        }
+
+            .upgrade-btn:hover {
+                background: #cfab7d;
+            }
+
+        .active-nav-link {
+            background: #cfab7d;
+        }
+
+        .nav-item:hover {
+            background: #402b23;
+        }
+
+        .account-link:hover {
+            background: #402b23;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-family-karla flex">
+    <aside class="relative bg-sidebar h-screen w-64 hidden sm:block shadow-xl">
+        <div class="p-6">
+            <a asp-controller="AdminTemplate" asp-action="Index" class="text-white text-3xl font-semibold uppercase hover:text-gray-300">Admin</a>
+        </div>
+        <nav class="text-white text-base font-semibold pt-3">
+            <a asp-controller="AdminTemplate" asp-action="Index" class="flex items-center active-nav-link text-white py-4 pl-6 nav-item">
+                <i class="fas fa-sticky-note mr-3"></i>
+                Dashboard
+            </a>
+            <a asp-controller="AdminTemplate" asp-action="Add" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+                <i class="fas fa-sticky-note mr-3"></i>
+                Add
+            </a>
+            <a asp-controller="AdminTemplate" asp-action="Tables" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+                <i class="fas fa-sticky-note mr-3"></i>
+                Tables
+            </a>
+            <a asp-controller="AdminTemplate" asp-action="Forms" class="flex items-center text-white opacity-75 hover:opacity-100 py-4 pl-6 nav-item">
+                <i class="fas fa-sticky-note mr-3"></i>
+                Forms
+            </a>
+           
+        </nav>
+    </aside>
+    <div class="w-full flex flex-col h-screen overflow-y-hidden">
+        <!-- Desktop Header -->
+        <header class="w-full items-center bg-white py-2 px-6 hidden sm:flex">
+            <div class="w-1/2"></div>
+            <div x-data="{ isOpen: false }" class="relative w-1/2 flex justify-end">
+            </div>
+        </header>
+        <div class="w-full overflow-x-hidden border-t flex flex-col">
+            <main class="w-full flex-grow p-6">
+                <h1 class="text-3xl text-black pb-6">Dashboard</h1>
+                <div class="flex flex-wrap mt-6 ">
+                    <div class="w-full lg:w-1/2 pr-0 lg:pr-2">
+                        <p class="text-xl pb-3 flex items-center">
+                            <i class="fas fa-plus mr-3"></i> Quantity Report
+                        </p>
+                        <div class="p-6 bg-white">
+                            <canvas id="chartOne" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="w-full mt-6">
+                        <p class="text-xl pb-3 flex items-center">
+                            <i class="fas fa-list mr-3"></i> Uptaded By Created By Table
+                        </p>
+                        <div class="bg-white overflow-auto">
+                            <table class="min-w-full bg-white">
+                                <thead class="bg-gray-800 text-white">
+                                    <tr>
+                                        <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm">Name</th>
+                                        <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm">Description</th>
+                                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Departmant</th>
+                                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Quantity</th>
+                                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Created By</th>
+                                        <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Uptaded By</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody class="text-gray-700">
+                                    @if (Model != null && Model.Any())
+                                    {
+                                        foreach (var product in Model)
+                                        {
+                                            <tr>
+                                                <td class="w-1/3 text-left py-3 px-4">@product.Name</td>
+                                                <td class="w-1/3 text-left py-3 px-4">@product.Description</td>
+                                                <td class="w-1/3 text-left py-3 px-4">@product.Department</td>
+                                                <td class="w-1/3 text-left py-3 px-4">@product.Quantity</td>
+                                                <td class="w-1/3 text-left py-3 px-4">@product.CreatedBy?.Name</td>
+
+                                                <td class="w-1/3 text-left py-3 px-4">@product.UpdatedBy?.Name</td>
+
+                                                
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="4" class="text-center py-3 px-4">No data available</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        </div>
+                </div>
+                <div class="w-full mt-12">
+                    <div class="bg-white overflow-auto">
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <script src="~/js/chart.js"></script>
+
+        <!-- AlpineJS -->
+        <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+        <!-- Font Awesome -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
+        <!-- ChartJS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+        <script>
+                var chartOneDataJson = '@Html.Raw(chartOneDataJson)';
+                var chartOneLabelsJson = '@Html.Raw(chartOneLabelsJson)';
+               
+                
+               
+        </script>
+    </body>
+</html>
